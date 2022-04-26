@@ -1,0 +1,44 @@
+.body {
+    box-sizing: border-box;
+    display: flex;
+    flex-wrap: wrap;
+    display: inline-block;
+    margin: 40px 18px;
+}
+
+.items {
+    width: 300px;
+}
+
+.box {
+    border: 1px solid #333;
+}
+
+.img {
+    width: 100%;
+}
+
+.name {
+    text-align: center;
+}
+
+.view_cmt {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+}
+
+h2 {
+    background-color: #333;
+    color: white;
+    margin: 0;
+}
+
+.chap_date {
+    display: flex;
+    justify-content: space-between;
+    background-color: #333;
+    color: white;
+    padding: 10px;
+    ;
+}
