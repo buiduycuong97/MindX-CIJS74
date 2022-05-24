@@ -1,8 +1,7 @@
 import React from "react";
 import "./AccountForm.css";
-// console.log(styles);
 
-const AccountForm = () => {
+const AccountForm = ({ isEnable, setIsEnable }) => {
   return (
     <div>
       <form className="account-form">
@@ -18,14 +17,19 @@ const AccountForm = () => {
           <input id="pass" placeholder="Password" type="password" />
           <input id="repass" placeholder="Repeat password" type="password" />
         </div>
-        <button>
-          <span>
+        <button className="account-form__btn">
+          <span className="account-form__sp">
             Reset Password <br />
             Sign In <br />
             Sign Up <br />
           </span>
         </button>
-        {/* <button onClick={() => setIsEnable(!isEnable)}>Close</button> */}
+        <button
+          className="account-form__btn"
+          onClick={() => setIsEnable(!isEnable)}
+        >
+          Close
+        </button>
       </form>
     </div>
   );
