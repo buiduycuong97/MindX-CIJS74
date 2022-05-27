@@ -1,50 +1,99 @@
-import React from "react";
-import "./NavbarHistory.css";
+import React, { useContext } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
-import { Button, Nav } from "react-bootstrap";
+import { Button, Nav, Navbar, NavDropdown, Container } from "react-bootstrap";
+import { AuthContext, logout } from "./userHistoryApp";
 
-const NavbarHistory = ({ setIsEnable }) => {
+const NavbarHistory = () => {
   const navigate = useNavigate();
+  const auth = useContext(AuthContext);
+
   const activeClassName = ({ isActive }) =>
-    isActive ? "nav-link text-danger" : "nav-link";
+    isActive ? "nav-link p-4 text-primary " : "nav-link p-4";
+
+  const logoutUser = () => {
+    const json = logout();
+    auth.setCurrentUser(json);
+    navigate("/login");
+  };
   return (
-    <div className="navbar-history">
-      <div className="navbar-history__header">
-        <div className="navbar-history__header__left">
-          <div className="name-page">
-            <Link to="/">Name</Link>
-          </div>
-          <div className="logo">
-            <Link to="/">Logo</Link>
-          </div>
+    <div>
+      <Navbar
+        bg="dark"
+        variant="dark"
+        style={{ display: "flex", justifyContent: "space-between" }}
+      >
+        <div className="ab">
+          <Nav>
+            <Nav.Link className="ms-5">Name Page</Nav.Link>
+            <Navbar.Brand href="#home" className="ms-5">
+              <img
+                src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Apple_logo_black.svg/1667px-Apple_logo_black.svg.png"
+                alt=""
+                width="30px"
+              />
+            </Navbar.Brand>
+          </Nav>
         </div>
-        <div className="navbar-history__header__right">
-          <input
-            checked
-            type="button"
-            onChange={() => ""}
-            defaultValue="Account"
-            onClick={() => {
-              navigate("/login");
-              setIsEnable(true);
-            }}
-          />
+        <div style={{ display: "flex", justifyContent: "flex-end" }}>
+          {auth.currentUser ? (
+            <>
+              <NavLink
+                className="nav-link"
+                to="/me"
+              >{`Xin chào ${auth.currentUser.name}`}</NavLink>
+              <Button
+                variant="outline-primary"
+                className="me-2"
+                onClick={logoutUser}
+              >
+                Logout
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button
+                variant="outline-secondary"
+                className="me-2"
+                onClick={() => navigate("/login")}
+              >
+                Login
+              </Button>{" "}
+              <Button
+                variant="outline-secondary "
+                className="me-2"
+                onClick={() => navigate("/signup")}
+              >
+                Signup
+              </Button>
+            </>
+          )}
         </div>
-      </div>
-      <Nav className="navbar-history__nav">
-        <NavLink to="/" className={activeClassName}>
-          Trang chủ
-        </NavLink>
-        <NavLink to="/tt" className={activeClassName}>
-          Thông tin
-        </NavLink>
-        <NavLink to="/tk" className={activeClassName}>
-          Thời kỳ
-        </NavLink>
-        <NavLink to="/ct" className={activeClassName}>
-          Chiến tích
-        </NavLink>
-      </Nav>
+      </Navbar>
+      <Navbar bg="dark" variant="dark">
+        <Navbar.Toggle aria-controls="basic-navbar-nav" />
+        <Navbar.Collapse
+          id="basic-navbar-nav"
+          style={{
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
+          <Nav>
+            <NavLink to="/tc" className={activeClassName}>
+              Trang chủ
+            </NavLink>
+            <NavLink to="/tt" className={activeClassName}>
+              Thông tin
+            </NavLink>
+            <NavLink to="/tk" className={activeClassName}>
+              Thời kỳ
+            </NavLink>
+            <NavLink to="/ct" className={activeClassName}>
+              Chiến tích
+            </NavLink>
+          </Nav>
+        </Navbar.Collapse>
+      </Navbar>
     </div>
   );
 };
