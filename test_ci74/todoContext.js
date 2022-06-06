@@ -3,8 +3,24 @@ import { createContext, useContext, useState } from "react";
 
 const TodoContext = createContext(null);
 function TodoProvider(props) {
+  const language = {
+    vi: {
+      task: "Nhiệm vụ còn lại của bạn : ",
+      unfinished: "Chưa hoàn thành",
+      submit: "Gửi đi",
+      reset: "Tạo mới",
+    },
+    en: {
+      task: "Your task left : ",
+      unfinished: "Unfinished",
+      submit: "Submit",
+      reset: "Reset",
+    },
+  };
+  const [changeLanguage, setChangeLanguage] = useState("en");
+
   const [job, setJob] = useState("");
-  const [jobs, setJobs] = useState(() => {
+  const [jobsLocal, setJobsLocal] = useState(() => {
     const storageJob = JSON.parse(localStorage.getItem("jobs"));
     if (storageJob) {
       return storageJob;
@@ -12,36 +28,60 @@ function TodoProvider(props) {
       return [];
     }
   });
+  //   console.log(jobsLocal);
+  const [jobs, setJobs] = useState(jobsLocal);
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const newJobs = [
+      ...jobsLocal,
+      {
+        name: job,
+        finished: false,
+        id: Math.floor(Math.random() * 10000),
+        date: Math.floor(Math.random() * (50 - 10) + 10) - new Date().getDate(),
+      },
+    ];
+    console.log(newJobs);
+
+    const jsonJobs = JSON.stringify(newJobs);
     setJobs((prev) => {
-      const newJobs = [
-        ...prev,
-        { name: job, finished: false, id: Math.floor(Math.random() * 10000) },
-      ];
-      const jsonJobs = JSON.stringify(newJobs);
-      localStorage.setItem("jobs", jsonJobs);
       return newJobs;
     });
+    localStorage.setItem("jobs", jsonJobs);
+    setJobsLocal(JSON.parse(localStorage.getItem("jobs")));
     setJob("");
   };
 
   const handleFilter = (checked) => {
     if (checked === false) {
-      setJobs(JSON.parse(localStorage.getItem("jobs")));
-    } else {
-      console.log(checked);
-
-      setJobs(jobs.filter((item) => item.finished === !checked));
+      setJobs(JSON.parse(localStorage.getItem("jobs")) || []);
+    } else if (checked === true) {
+      setJobs(
+        JSON.parse(localStorage.getItem("jobs")).filter(
+          (item) => item.finished === !checked
+        ) || []
+      );
     }
   };
 
-  //   useEffect(() => {
-  //     const updateJobs = [...jobs];
-  //     localStorage.setItem("jobs", JSON.stringify(updateJobs));
-  //   }, [jobs]);
-  const value = { jobs, setJobs, job, setJob, handleSubmit, handleFilter };
+  const reset = () => {
+    localStorage.removeItem("jobs");
+    setJobs([]);
+    setJobsLocal([]);
+  };
+  const value = {
+    jobs,
+    setJobs,
+    job,
+    setJob,
+    handleSubmit,
+    handleFilter,
+    language,
+    changeLanguage,
+    setChangeLanguage,
+    reset,
+  };
   return <TodoContext.Provider value={value} {...props}></TodoContext.Provider>;
 }
 

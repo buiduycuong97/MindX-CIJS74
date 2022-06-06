@@ -1,11 +1,13 @@
 import { useTodo } from "./todoContext";
 
 const Header = () => {
-  const { jobs, handleFilter } = useTodo();
+  const { jobs, handleFilter, language, changeLanguage } = useTodo();
   return (
     <div className="header">
-      You have {jobs.filter((item) => item.finished === false).length} tasks
-      left!
+      {language[changeLanguage].task}{" "}
+      {(jobs.length > 0 &&
+        jobs.filter((item) => item.finished === false).length) ||
+        "0"}
       <div>
         <input
           type="checkbox"
@@ -14,7 +16,7 @@ const Header = () => {
             console.log(e.target.checked);
           }}
         />
-        Unfinished
+        {language[changeLanguage].unfinished}
       </div>
     </div>
   );
